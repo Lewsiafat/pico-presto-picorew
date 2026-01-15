@@ -19,7 +19,8 @@
 ### 📊 內建頁面
 1.  **Startup Page (啟動頁)**：開機動畫展示 (3 秒)。
 2.  **Status Page (狀態頁)**：即時顯示網路連線狀態、IP 地址與系統運行時間。
-3.  **Crypto Page (加密貨幣頁)**：顯示比特幣 (BTC) 與乙太幣 (ETH) 即時價格 (來源 CoinGecko，每 60 秒更新)。
+3.  **Crypto Page (加密貨幣頁)**：顯示比特幣 (BTC) 與乙太幣 (ETH) 即時價格 (來源 CoinGecko，每 20 秒更新)。
+4.  **Weather Page (天氣頁)**：顯示台北即時天氣 (溫度與狀態) (來源 Open-Meteo)。
 
 ---
 
@@ -47,6 +48,7 @@
 | `StartupPage.py` | 開機畫面的邏輯。 |
 | `StatusPage.py` | 網路狀態顯示頁面的邏輯。 |
 | `CryptoPage.py` | 加密貨幣價格顯示頁面的邏輯。 |
+| `WeatherPage.py` | 天氣顯示頁面的邏輯。 |
 | `wifi_manager.py` | 負責背景運行的 WiFi 狀態機。 |
 | `config.py` | 集中式設定檔。 |
 

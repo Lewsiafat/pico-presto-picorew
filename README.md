@@ -19,7 +19,8 @@ A feature-rich display application for **Raspberry Pi Pico W** and **Pimoroni Pr
 ### 📊 Built-in Pages
 1.  **Startup Page**: Boot animation (3 seconds).
 2.  **Status Page**: Real-time Network State, IP Address, and Uptime.
-3.  **Crypto Page**: Live Bitcoin (BTC) & Ethereum (ETH) prices (via CoinGecko, updates every 60s).
+3.  **Crypto Page**: Live Bitcoin (BTC) & Ethereum (ETH) prices (via CoinGecko, updates every 20s).
+4.  **Weather Page**: Real-time weather updates (Temp & Condition) for Taipei (via Open-Meteo).
 
 ---
 
@@ -47,6 +48,7 @@ Edit `src/config.py` to customize the application:
 | `StartupPage.py` | Initial boot screen logic. |
 | `StatusPage.py` | Network status display logic. |
 | `CryptoPage.py` | Cryptocurrency ticker logic. |
+| `WeatherPage.py` | Weather display logic (Open-Meteo). |
 | `wifi_manager.py` | Background WiFi state machine. |
 | `config.py` | Centralized configuration. |
 
