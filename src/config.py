@@ -22,8 +22,9 @@ class WiFiConfig:
 class UIConfig:
     """Configuration for UI appearance and behavior."""
     STARTUP_DURATION = 3000
-    CRYPTO_REFRESH_INTERVAL = 20
-    CRYPTO_API_URL = "https://api.coingecko.com/api/v3/simple/price?ids=bitcoin,ethereum&vs_currencies=usd"
+    STARTUP_DURATION = 3000
+    CRYPTO_WS_URL = "wss://stream.binance.com:9443/stream?streams=btcusdt@trade/ethusdt@trade"
+    # CRYPTO_API_URL = "https://api.coingecko.com/api/v3/simple/price?ids=bitcoin,ethereum&vs_currencies=usd"
     
     # RGB Colors
     COLOR_PALETTE = {

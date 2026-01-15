@@ -97,7 +97,8 @@ class WeatherPage(Page):
             return
 
         # Main Temperature Display
-        temp_y = int(height * 0.45)
+        # Main Temperature Display
+        temp_y = int(height * 0.50)
         vector.set_font_size(80)
         vector.set_font_align(HALIGN_CENTER | VALIGN_MIDDLE)
         
@@ -112,7 +113,7 @@ class WeatherPage(Page):
         vector.text(f"{self.temp:.1f}°C", (width // 2) + offset_x, temp_y)
 
         # Condition Text
-        cond_y = int(height * 0.65)
+        cond_y = int(height * 0.70)
         condition_text = self.get_weather_desc(self.wmo_code)
         
         vector.set_font_size(24)
@@ -124,4 +125,4 @@ class WeatherPage(Page):
         vector.set_font_size(16)
         vector.set_font_align(HALIGN_CENTER | VALIGN_MIDDLE)
         display.set_pen(self.colors["GRAY"])
-        vector.text("Loc: Taipei", (width // 2) + offset_x, footer_y)
+        vector.text("Location: Taipei", (width // 2) + offset_x, footer_y)

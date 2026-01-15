@@ -19,7 +19,7 @@ A feature-rich display application for **Raspberry Pi Pico W** and **Pimoroni Pr
 ### 📊 Built-in Pages
 1.  **Startup Page**: Boot animation (3 seconds).
 2.  **Status Page**: Real-time Network State, IP Address, and Uptime.
-3.  **Crypto Page**: Live Bitcoin (BTC) & Ethereum (ETH) prices (via CoinGecko, updates every 20s).
+3.  **Crypto Page**: Live Bitcoin (BTC) & Ethereum (ETH) prices (via Binance WebSocket, Real-time).
 4.  **Weather Page**: Real-time weather updates (Temp & Condition) for Taipei (via Open-Meteo).
 
 ---
