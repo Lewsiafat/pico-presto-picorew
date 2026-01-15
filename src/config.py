@@ -22,7 +22,7 @@ class WiFiConfig:
 class UIConfig:
     """Configuration for UI appearance and behavior."""
     STARTUP_DURATION = 3000
-    CRYPTO_REFRESH_INTERVAL = 60
+    CRYPTO_REFRESH_INTERVAL = 20
     CRYPTO_API_URL = "https://api.coingecko.com/api/v3/simple/price?ids=bitcoin,ethereum&vs_currencies=usd"
     
     # RGB Colors
@@ -37,3 +37,13 @@ class UIConfig:
         "YELLOW": (255, 215, 0),
         "CYAN": (0, 255, 255)
     }
+
+class WeatherConfig:
+    """Configuration for Weather updates (Open-Meteo)."""
+    # Default: Taipei, Taiwan
+    LATITUDE = 25.0330 
+    LONGITUDE = 121.5654
+    UPDATE_INTERVAL = 900 # 15 minutes (900 seconds)
+    
+    # API URL (Dynamically constructed in Page, but base config here if needed or just use params)
+    API_URL = "https://api.open-meteo.com/v1/forecast"
