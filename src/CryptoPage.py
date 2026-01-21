@@ -24,8 +24,8 @@ class CryptoPage(Page):
     def enter(self):
         super().enter()
         self.last_error = None
-        if self.ws_task is None:
-            self.ws_task = asyncio.create_task(self.params_ws_loop())
+        # Defers WS connection to update() to prevent freezing the transition
+
 
     def exit(self):
         super().exit()
@@ -38,7 +38,9 @@ class CryptoPage(Page):
         self.is_connected = False
 
     async def update(self):
-        pass 
+        # Start WS task here, after transition is complete (UI_STATE_NORMAL)
+        if self.ws_task is None:
+            self.ws_task = asyncio.create_task(self.params_ws_loop()) 
 
     async def params_ws_loop(self):
         while True:

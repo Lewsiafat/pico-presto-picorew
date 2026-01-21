@@ -99,7 +99,7 @@ class WeatherPage(Page):
         # Main Temperature Display
         # Main Temperature Display
         temp_y = int(height * 0.50)
-        vector.set_font_size(80)
+        vector.set_font_size(60)
         vector.set_font_align(HALIGN_CENTER | VALIGN_MIDDLE)
         
         # Color based on temp
@@ -110,7 +110,7 @@ class WeatherPage(Page):
         else:
             display.set_pen(self.colors["GREEN"])
             
-        vector.text(f"{self.temp:.1f}°C", (width // 2) + offset_x, temp_y)
+        vector.text(f"{self.temp:.1f}c", ((width // 2)-20) + offset_x, temp_y)
 
         # Condition Text
         cond_y = int(height * 0.70)

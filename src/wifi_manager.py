@@ -2,6 +2,7 @@ import network
 import uasyncio as asyncio
 import time
 import machine
+import ntptime
 from config_manager import ConfigManager
 from dns_server import DNSServer
 from web_server import WebServer
@@ -126,6 +127,15 @@ class WiFiManager:
         while (time.time() - start_time) < WiFiConfig.CONNECT_TIMEOUT:
             if self.wlan.isconnected():
                 print("WiFiManager: Connection Successful!")
+                
+                # Sync Time
+                try:
+                    print("WiFiManager: Syncing with NTP...")
+                    ntptime.settime()
+                    print(f"WiFiManager: Time Synced: {time.localtime()}")
+                except Exception as e:
+                    print(f"WiFiManager: NTP Sync failed: {e}")
+
                 self._state = STATE_CONNECTED
                 self._retry_count = 0
                 return

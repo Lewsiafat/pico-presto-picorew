@@ -6,8 +6,8 @@ from wifi_manager import WiFiManager
 from StatusPage import StatusPage
 from CryptoPage import CryptoPage
 from WeatherPage import WeatherPage
+from ClockPage import ClockPage
 from StartupPage import StartupPage
-from presto import Presto
 import gc
 
 async def main():
@@ -42,10 +42,13 @@ async def main():
     app_manager.add_page(StartupPage(app_manager))
     # Page 1: Status
     app_manager.add_page(StatusPage(app_manager))
+    # Page 4: Clock
+    app_manager.add_page(ClockPage(app_manager))
     # Page 2: Crypto Ticker
     app_manager.add_page(CryptoPage(app_manager))
     # Page 3: Weather
     app_manager.add_page(WeatherPage(app_manager))
+   
     
     # 5. Run App
     await app_manager.run(vector)

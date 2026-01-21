@@ -22,6 +22,10 @@ class Page:
         """Called when the page becomes active."""
         print(f"Entering page: {self.name}")
 
+    def on_tap(self):
+        """Called when the screen is tapped."""
+        pass
+        
     def exit(self):
         """Called when the page is left."""
         print(f"Exiting page: {self.name}")
@@ -57,6 +61,7 @@ class AppManager:
         
         # Touch handling
         self.touch_start_x = 0
+        self.last_touch_x = 0
         self.touch_start_time = 0
         self.min_swipe_dist = 40
         self.max_swipe_time = 500
@@ -111,20 +116,33 @@ class AppManager:
             if self.touch_start_time == 0:
                 self.touch_start_time = time.ticks_ms()
                 self.touch_start_x = self.touch.x
+            
+            # Continuously update last known X to avoid 0-read issues on release
+            self.last_touch_x = self.touch.x
         else:
             # Touch end
             if self.touch_start_time != 0:
                 touch_duration = time.ticks_diff(time.ticks_ms(), self.touch_start_time)
-                touch_dist = self.touch.x - self.touch_start_x
+                
+                # Use last_touch_x for distance calculation
+                touch_dist = self.last_touch_x - self.touch_start_x
+                
+                print(f"Touch Input: Duration={touch_duration}ms, Dist={touch_dist}, StartX={self.touch_start_x}, EndX={self.last_touch_x}")
                 
                 # Check for swipe
-                if touch_duration < self.max_swipe_time and abs(touch_dist) > self.min_swipe_dist:
-                    if touch_dist < 0:
-                        # Swipe Left -> Next Page
-                        self.next_page()
+                if touch_duration < self.max_swipe_time:
+                    if abs(touch_dist) > self.min_swipe_dist:
+                        if touch_dist < 0:
+                            # Swipe Left -> Next Page
+                            self.next_page()
+                        else:
+                            # Swipe Right -> Previous Page
+                            self.prev_page()
                     else:
-                        # Swipe Right -> Previous Page
-                        self.prev_page()
+                        # Tap detected (short duration, small movement)
+                         print("AppManager: Tap Detected!")
+                         current_page = self.pages[self.current_page_index]
+                         current_page.on_tap()
                 
                 self.touch_start_time = 0
 
