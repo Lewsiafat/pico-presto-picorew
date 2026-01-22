@@ -4,17 +4,18 @@ import uasyncio as asyncio
 from ui_framework import Page, get_colors
 from picovector import HALIGN_LEFT, HALIGN_CENTER, VALIGN_MIDDLE, HALIGN_RIGHT
 from config import UIConfig, WeatherConfig
+from param_store import get_params
 
 class WeatherPage(Page):
     def __init__(self, app_manager):
         super().__init__("Weather", app_manager)
         self.colors = get_colors(app_manager.display)
-        
+        self.params = get_params()
+
         self.temp = 0.0
         self.wmo_code = -1
         self.is_day = 1
         self.last_fetch_time = 0
-        self.fetch_interval = WeatherConfig.UPDATE_INTERVAL
         self.last_error = None
         
         self.weather_map = {
@@ -31,20 +32,25 @@ class WeatherPage(Page):
     async def enter(self):
         super().enter()
         # Trigger fetch if data is stale or never fetched
-        if time.time() - self.last_fetch_time > self.fetch_interval or self.last_fetch_time == 0:
+        fetch_interval = self.params.get("weather_interval", 900)
+        if time.time() - self.last_fetch_time > fetch_interval or self.last_fetch_time == 0:
             await self.fetch_weather()
 
     async def update(self):
         # Periodic fetch
-        if time.time() - self.last_fetch_time > self.fetch_interval:
+        fetch_interval = self.params.get("weather_interval", 900)
+        if time.time() - self.last_fetch_time > fetch_interval:
             await self.fetch_weather()
 
     async def fetch_weather(self):
         print("WeatherPage: Fetching data...")
         self.last_error = None
         try:
+            # Get location from params
+            lat = self.params.get("weather_latitude", 25.0330)
+            lon = self.params.get("weather_longitude", 121.5654)
             # Construct URL for Open-Meteo
-            url = f"{WeatherConfig.API_URL}?latitude={WeatherConfig.LATITUDE}&longitude={WeatherConfig.LONGITUDE}&current_weather=true"
+            url = f"{WeatherConfig.API_URL}?latitude={lat}&longitude={lon}&current_weather=true"
             
             headers = {'User-Agent': 'PicoreW/1.0'}
             res = urequests.get(url, headers=headers)
@@ -120,9 +126,12 @@ class WeatherPage(Page):
         display.set_pen(self.colors["WHITE"])
         vector.text(condition_text, (width // 2) + offset_x, cond_y)
 
-        # Footer
+        # Footer - show dynamic location
         footer_y = int(height * 0.85)
+        lat = self.params.get("weather_latitude", 25.0330)
+        lon = self.params.get("weather_longitude", 121.5654)
+        location_str = f"Lat: {lat:.2f}, Lon: {lon:.2f}"
         vector.set_font_size(16)
         vector.set_font_align(HALIGN_CENTER | VALIGN_MIDDLE)
         display.set_pen(self.colors["GRAY"])
-        vector.text("Location: Taipei", (width // 2) + offset_x, footer_y)
+        vector.text(location_str, (width // 2) + offset_x, footer_y)

@@ -8,6 +8,8 @@ from CryptoPage import CryptoPage
 from WeatherPage import WeatherPage
 from ClockPage import ClockPage
 from StartupPage import StartupPage
+from SettingsPage import SettingsPage
+from param_store import get_params
 import gc
 
 async def main():
@@ -31,26 +33,32 @@ async def main():
         print(f"Error initializing hardware: {e}")
         return
 
-    # 2. Initialize WiFi Manager (starts its own state machine task)
+    # 2. Initialize Parameter Store
+    params = get_params()
+    print(f"ParamStore initialized with timezone={params.get('timezone_offset')}")
+
+    # 3. Initialize WiFi Manager (starts its own state machine task)
     wm = WiFiManager()
     
-    # 3. Initialize UI Framework
+    # 4. Initialize UI Framework
     app_manager = AppManager(presto, wm)
     
-    # 4. Add Pages
+    # 5. Add Pages
     # Page 0: Startup (3s delay)
     app_manager.add_page(StartupPage(app_manager))
     # Page 1: Status
     app_manager.add_page(StatusPage(app_manager))
-    # Page 4: Clock
+    # Page 2: Clock
     app_manager.add_page(ClockPage(app_manager))
-    # Page 2: Crypto Ticker
+    # Page 3: Crypto Ticker
     app_manager.add_page(CryptoPage(app_manager))
-    # Page 3: Weather
+    # Page 4: Weather
     app_manager.add_page(WeatherPage(app_manager))
+    # Page 5: Settings
+    app_manager.add_page(SettingsPage(app_manager))
    
     
-    # 5. Run App
+    # 6. Run App
     await app_manager.run(vector)
 
 if __name__ == "__main__":

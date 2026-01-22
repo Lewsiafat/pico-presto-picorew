@@ -1,26 +1,37 @@
 import time
 import math
-from ui_framework import Page, get_colors
+from ui_framework import Page, get_colors, calc_centered_pos
 from picovector import HALIGN_CENTER, VALIGN_MIDDLE, HALIGN_RIGHT, HALIGN_LEFT
+from param_store import get_params
 
 class ClockPage(Page):
     def __init__(self, app_manager):
         super().__init__("Clock", app_manager)
         self.colors = get_colors(app_manager.display)
         self.dim_white = app_manager.display.create_pen(170, 170, 170)
-        self.mode = 0 # 0=Digital, 1=Analog
+        self.params = get_params()
+        self.mode = self.params.get("clock_mode", 0)  # 0=Digital, 1=Analog
+
+        # Subscribe to parameter changes
+        self.params.subscribe("timezone_offset", self._on_timezone_change)
+        self.params.subscribe("clock_mode", self._on_mode_change)
+
+    def _on_timezone_change(self, new_val, old_val):
+        print(f"ClockPage: Timezone changed from {old_val} to {new_val}")
+
+    def _on_mode_change(self, new_val, old_val):
+        self.mode = new_val
+        print(f"ClockPage: Mode changed to {'Analog' if new_val == 1 else 'Digital'}")
         
     def on_tap(self):
-        self.mode = 1 - self.mode # Toggle 0 <-> 1
-        print(f"ClockPage: Mode switched to {'Analog' if self.mode == 1 else 'Digital'}")
+        new_mode = 1 - self.mode  # Toggle 0 <-> 1
+        self.params.set("clock_mode", new_mode)  # This triggers _on_mode_change
 
     def draw(self, display, vector, offset_x=0):
-        # Get Time
-        # Timezone offset: Taipei is UTC+8. 
-        # ntptime sets UTC. We need to add 8 hours (8 * 3600 seconds)
-        # Note: This is a simple offset. For robust Timezone support, dedicated libs are better.
+        # Get Time with configurable timezone offset
+        tz_offset = self.params.get("timezone_offset", 8)
         utc_time = time.time()
-        local_time = time.localtime(utc_time + (8 * 3600))
+        local_time = time.localtime(utc_time + (tz_offset * 3600))
         
         if self.mode == 0:
             self.draw_digital(display, vector, local_time, offset_x)
@@ -51,10 +62,10 @@ class ClockPage(Page):
         vector.text(date_str, (width // 2) + offset_x, date_y)
 
         # Draw HH:MM
-        vector.set_font_size(55)
-        vector.set_font_align(HALIGN_CENTER | VALIGN_MIDDLE)
+        time_x, _ = calc_centered_pos(vector, time_str, 55, (width // 2) + offset_x, time_y)
+        vector.set_font_align(HALIGN_LEFT | VALIGN_MIDDLE)
         display.set_pen(self.dim_white)
-        vector.text(time_str, ((width // 2)-30) + offset_x, time_y)
+        vector.text(time_str, time_x, time_y)
         
         # Draw Seconds
         # Blinking colon effect or similar? NO, user asked for tick effect.
