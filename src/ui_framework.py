@@ -10,6 +10,26 @@ def get_colors(display):
         pens[name] = display.create_pen(*rgb)
     return pens
 
+def calc_centered_pos(vector, text, font_size, center_x, center_y):
+    """
+    Calculate top-left position to center text at given point.
+
+    Args:
+        vector: PicoVector instance
+        text: Text string to measure
+        font_size: Font size to use
+        center_x: Desired center X coordinate
+        center_y: Desired center Y coordinate
+
+    Returns:
+        (x, y): Top-left position for centered text
+    """
+    vector.set_font_size(font_size)
+    _, _, w, h = vector.measure_text(text)
+    x = int(center_x - w // 2)
+    y = int(center_y - h // 2)
+    return (x, y)
+
 class Page:
     """
     Abstract base class for all pages.
